@@ -16,7 +16,7 @@ module MEM(
 	reg [31:0] memory [0:8191];
 
 	initial begin
-		$readmemh("initial_mem.mem", memory);
+		$readmemh("./testcase/testcase2/initial_mem.mem", memory);
 	end
 
 	// Read instruction + memory data

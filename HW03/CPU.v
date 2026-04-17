@@ -60,7 +60,7 @@ module CPU(
 
 	// Define the wires
 	wire alu_zero; // alu_zero wire for Branch mux signal
-	wire [31:0] pc_plus_4;
+	wire [31:0] pc_plus_4 = PC + 4;
 	wire [31:0] branch_target = pc_plus_4 + (ext_imm << 2);
 	wire [31:0] jump_target = {pc_plus_4[31:28], immj, 2'b00};
 

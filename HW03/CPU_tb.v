@@ -17,12 +17,12 @@ module CPU_tb;
     CPU cpu (.clk(clk), .rst(rst), .halt(halt));
 
 	initial begin : REF_INIT
-		$readmemh("reference_mem.mem", memory);
-		$readmemh("reference_reg.mem", register_file);
+		$readmemh("./testcase/testcase2/reference_mem.mem", memory);
+		$readmemh("./testcase/testcase2/reference_reg.mem", register_file);
 	end
     
 
-    initial begin : CLOCK_GENERATOR
+    initial begin : CLOCK_GENERATOR`
         clk = 1'b0;
         forever #5 clk = ~clk;
     end
