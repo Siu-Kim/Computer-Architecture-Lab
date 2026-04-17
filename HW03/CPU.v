@@ -60,6 +60,18 @@ module CPU(
 
 	// Define the wires
 	wire alu_zero; // alu_zero wire for Branch mux signal
+	wire [31:0] pc_plus_4;
+	wire [31:0] branch_target = pc_plus_4 + (ext_imm << 2);
+	wire [31:0] jump_target = {pc_plus_4[31:28], immj, 2'b00};
+
+	assign opcode = inst[31:26];
+	assign rs 	  = inst[25:21];
+	assign rt 	  = inst[20:16];
+	assign rd 	  = inst[15:11];
+	assign shamt  = inst[10:6];
+	assign funct  = inst[5:0];
+	assign immi	  = inst[15:0];
+	assign immj   = inst[25:0];
 
 	assign halt				= (inst == 32'b0);
 
@@ -73,11 +85,17 @@ module CPU(
 		//register write address를 위한 두 mux 정의 (SavePC mux for jal, RegDst mux for R-type, I-type inst)
 		wr_addr = SavePC ? 5'd31 : (RegDst ? rd : rt);
 		//register write data를 위한 두 mux 정의(SavePC mux for jal, MemtoReg mux for mem logic)
-		wr_data = SavePC ? (PC+4) : (MemtoReg ? mem_read_data : alu_result);
+		wr_data = SavePC ? pc_plus_4 : (MemtoReg ? mem_read_data : alu_result);
 
-		// JR / Jump / Branch inst mux for setting the PC_next		
-		PC_next = JR ? rd_data1 : (Jump ? {{(PC+4)[31:28]}, immj, 2'b00} : 
-			((Branch & alu_zero) ? ((PC + 4) + (ext_imm << 2)) : PC + 4));
+		// JR / Jump / Branch inst mux for setting the PC_next
+		if(JR)
+			PC_next = rd_data1;
+		else if(Jump)
+			PC_next = jump_target;
+		else if(Branch & alu_zero)
+			PC_next = branch_target;
+		else
+			PC_next = pc_plus_4;
 	end
 
 
@@ -120,7 +138,7 @@ module CPU(
 	MEM mem (
 		.clk(clk),
 		.rst(rst),
-		.inst_addr(PC_next),
+		.inst_addr(PC),
 		.inst(inst),
 		.mem_addr(alu_result),
 		.MemWrite(MemWrite),

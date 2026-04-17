@@ -34,18 +34,45 @@ module CTRL(
 				ALUSrc = 1'b0;
 				
 				case(funct)
-					`FUNCT_SLL: ALUOp = 4'b0100;
-					`FUNCT_SRL: ALUOp = 4'b0110;
-					`FUNCT_SRA: ALUOp = 4'b0101;
-					`FUNCT_JR: JR = 1'b1; RegWrite = 0; RegDst = 0; ALUSrc = 0;
-					`FUNCT_ADDU: ALUOp = 4'b0000;
-					`FUNCT_SUBU: ALUOp = 4'b0111;
-					`FUNCT_AND: ALUOp = 4'b0001;
-					`FUNCT_OR: ALUOp = 4'b0011;
-					`FUNCT_XOR: ALUOp = 4'b1000;
-					`FUNCT_NOR: ALUOp = 4'b0010;
-					`FUNCT_SLT: ALUOp = 4'b1001;
-					`FUNCT_SLTU: ALUOp = 4'b1010;
+					`FUNCT_SLL: begin 
+						ALUOp = 4'b0100;
+					end
+					`FUNCT_SRL: begin 
+						ALUOp = 4'b0110;
+					end
+					`FUNCT_SRA: begin 
+						ALUOp = 4'b0101;
+					end
+					`FUNCT_JR : begin 
+						JR = 1'b1;
+						RegWrite = 1'b0; 
+						RegDst = 1'b0; 
+						ALUSrc = 1'b0;
+					end
+					`FUNCT_ADDU: begin 
+						ALUOp = 4'b0000;
+					end
+					`FUNCT_SUBU: begin 
+						ALUOp = 4'b0111;
+					end
+					`FUNCT_AND: begin 
+						ALUOp = 4'b0001;
+					end
+					`FUNCT_OR: begin 
+						ALUOp = 4'b0011;
+					end
+					`FUNCT_XOR: begin 
+						ALUOp = 4'b1000;
+					end
+					`FUNCT_NOR: begin 
+						ALUOp = 4'b0010;
+					end 
+					`FUNCT_SLT: begin 
+						ALUOp = 4'b1001;
+					end
+					`FUNCT_SLTU: begin 
+						ALUOp = 4'b1010;
+					end
 				endcase
 			end 
 
@@ -127,14 +154,14 @@ module CTRL(
 				RegWrite = 1'b1;
 				ALUSrc = 1'b1;
 				ALUOp = `ALU_ADDU;
-				signExtend = 1'b1;
+				SignExtend = 1'b1;
 			end
 			//memory access
 			`OP_SW: begin 
 				MemWrite = 1'b1;
 				ALUSrc = 1'b1;
 				ALUOp = `ALU_ADDU;
-				signExtend = 1'b1;
+				SignExtend = 1'b1;
 			end
 		endcase
 	end

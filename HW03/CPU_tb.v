@@ -27,7 +27,7 @@ module CPU_tb;
         forever #5 clk = ~clk;
     end
     
-    initial begin :
+    initial begin : Settings
 		FAILED = 0;
         rst = 1;
         #15
