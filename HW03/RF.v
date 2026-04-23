@@ -25,7 +25,7 @@ module RF (
 	always @(posedge clk) begin
 		// Reset the regsiter file to pre-defined values
 		if (rst) begin
-        	$readmemh("./testcase/testcase2/initial_reg.mem", register_file);
+        	$readmemh("./testcase/testcase1/initial_reg.mem", register_file);
 		end
 		else begin
 			if(RegWrite) begin

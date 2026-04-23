@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-
 module CPU(
 	input		clk,
 	input		rst,
@@ -63,7 +62,8 @@ module CPU(
 	wire [31:0] pc_plus_4 = PC + 4;
 	wire [31:0] branch_target = pc_plus_4 + (ext_imm << 2);
 	wire [31:0] jump_target = {pc_plus_4[31:28], immj, 2'b00};
-
+	assign alu_zero = (opcode == `OP_BEQ) ? (alu_result == 32'd0) : (alu_result != 32'd0);
+	
 	assign opcode = inst[31:26];
 	assign rs 	  = inst[25:21];
 	assign rt 	  = inst[20:16];
@@ -75,11 +75,11 @@ module CPU(
 
 	assign halt				= (inst == 32'b0);
 
-	assign ext_imm = SignExtend ? {{16{immi[15]}}, immi[15:0]} : 32'd0; // sign-extender
+	assign ext_imm = SignExtend ? {{16{immi[15]}}, immi[15:0]} : 32'd0 + immi; // sign-extender
 	assign operand1 = rd_data1;
 	assign operand2 = ALUSrc ? ext_imm : rd_data2; // ALUSrc mux
 	//beq - condition taken, alu_result == 0, wire = 1 / not taken, alu_result != 0, wire = 0 
-	assign alu_zero = (opcode == `OP_BEQ) ? (alu_result == 32'd0) : (alu_result != 32'd0);
+	
 
 	always @(*) begin
 		//register write address를 위한 두 mux 정의 (SavePC mux for jal, RegDst mux for R-type, I-type inst)
@@ -153,5 +153,4 @@ module CPU(
 		.funct(ALUOp),
 		.alu_result(alu_result)
 	);
-	
 endmodule

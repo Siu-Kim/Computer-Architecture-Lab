@@ -124,27 +124,23 @@ module CTRL(
 				RegWrite = 1'b1;
 				ALUSrc = 1'b1;
 				ALUOp = 4'b0001;
-				SignExtend = 1'b1;
 			end
 
 			`OP_ORI: begin
 				RegWrite = 1'b1;
 				ALUSrc = 1'b1;
 				ALUOp = 4'b0011;
-				SignExtend = 1'b1;
 			end
 			`OP_XORI: begin
 				RegWrite = 1'b1;
 				ALUSrc = 1'b1;
 				ALUOp = 4'b1000;
-				SignExtend = 1'b1;
 			end
 
 			`OP_LUI: begin
 				RegWrite = 1'b1;
 				ALUSrc = 1'b1;
 				ALUOp = 4'b1101;
-				SignExtend = 1'b1;
 			end
 
 			//memory access
