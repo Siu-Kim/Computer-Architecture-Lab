@@ -17,8 +17,8 @@ module CPU_tb;
     CPU cpu (.clk(clk), .rst(rst), .halt(halt));
 
 	initial begin : REF_INIT
-		$readmemh("./testcase/testcase1/reference_mem.mem", memory);
-		$readmemh("./testcase/testcase1/reference_reg.mem", register_file);
+		$readmemh("reference_mem.mem", memory);
+		$readmemh("reference_reg.mem", register_file);
 	end
     
 
