@@ -16,6 +16,21 @@ module CPU_tb;
 
     CPU cpu (.clk(clk), .rst(rst), .halt(halt));
 
+	/*
+	always @(posedge clk) begin
+		if((cpu.funct == 6'd8) && (cpu.opcode == 6'd0)) begin
+			$display("JR inst | PC: %h | $r31: %h | nextPC: %h", cpu.PC, cpu.rf.register_file[31], cpu.PC_next);
+		end
+		else if(cpu.opcode == 6'd3) begin
+			$display("JAL isnst | PC: %h | $r31: %h | nextPC: %h | npc_reg: %h", cpu.PC, cpu.rf.register_file[31], cpu.PC_next, cpu.npc_reg);
+		end
+		else if(cpu.opcode == 6'd2) begin
+			$display("J inst | PC: %h | nextPC: %h", cpu.PC, cpu.PC_next);
+		end
+
+	end
+	*/
+
 	initial begin : REF_INIT
 		$readmemh("reference_mem.mem", memory);
 		$readmemh("reference_reg.mem", register_file);
