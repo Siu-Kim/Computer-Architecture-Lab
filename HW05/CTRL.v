@@ -7,30 +7,30 @@ module CTRL(
 	input [5:0] funct,
 
 	// output various ports
-	output reg RegDst,
-	output reg Jump,
-	output reg Branch,
-	output reg JR,
 	output reg MemRead,
-	output reg MemtoReg,
+	output reg [1:0] MemtoReg,
 	output reg MemWrite,
-	output reg ALUSrc,
 	output reg SignExtend,
+	output reg [1:0] RegDst,
 	output reg RegWrite,
 	output reg [3:0] ALUOp,
-	output reg SavePC
+	output reg ALUSrc,
+	output reg PCSrc,
+	output reg [1:0] PCSrcCtrl
     );
 
 	always @(*) begin
 		// FIXME
-		RegDst = 0; Jump = 0; Branch = 0; JR = 0; MemRead = 0; 
-		MemtoReg = 0; MemWrite = 0; ALUSrc = 0; SignExtend = 0;
-		RegWrite = 0; SavePC = 0; ALUOp = 4'bxxxx;
+		// ID stage에서 매 cycle마다 새로운 instruction을 
+		// fetch하는 control signal을 default로 초기화
+		MemRead = 0; MemtoReg = 2'b00; MemWrite = 0; SignExtend = 0; 
+		RegDst = 0; RegWrite = 0; ALUOp = 4'bxxxx; ALUSrc = 0;
+		PCSrc = 0; PCSrcCtrl = 0;
 
 		case(opcode)
 			`OP_RTYPE: begin
 				RegWrite = 1'b1;
-				RegDst = 1'b1;
+				RegDst = 2'b01;
 				ALUSrc = 1'b0;
 				
 				case(funct)
@@ -44,10 +44,10 @@ module CTRL(
 						ALUOp = 4'b0101;
 					end
 					`FUNCT_JR : begin 
-						JR = 1'b1;
-						RegWrite = 1'b0; 
-						RegDst = 1'b0; 
+						RegWrite = 1'b0;  
 						ALUSrc = 1'b0;
+						PCSrcCtrl = 2'b01;
+						PCSrc = 1'b1;
 					end
 					`FUNCT_ADDU: begin 
 						ALUOp = 4'b0000;
@@ -77,26 +77,30 @@ module CTRL(
 			end 
 
 			`OP_J: begin
-				Jump = 1'b1;
+				PCSrcCtrl = 2'b00;
+				PCSrc = 1'b1;
 			end
 
 			`OP_JAL: begin
-				SavePC = 1'b1;
+				MemtoReg = 2'b10;
+				RegDst = 2'b10;
 				RegWrite = 1'b1;
-				Jump = 1'b1;
+				PCSrcCtrl = 2'b00;
+				PCSrc = 1'b1;
 			end
 
 			`OP_BEQ: begin
-				Branch = 1'b1;
 				ALUOp = 4'b0111;
 				SignExtend = 1'b1;
+				PCSrcCtrl = 2'b10;
+				PCSrc = 1'b1;
 			end
 
 			`OP_BNE: begin
-				Branch = 1'b1;
 				ALUOp = 4'b0111;
 				SignExtend = 1'b1;
-
+				PCSrcCtrl = 2'b10;
+				PCSrc = 1'b1;
 			end
 
 			`OP_ADDIU: begin
@@ -146,7 +150,7 @@ module CTRL(
 			//memory access
 			`OP_LW: begin 
 				MemRead = 1'b1;
-				MemtoReg = 1'b1;
+				MemtoReg = 2'b01;
 				RegWrite = 1'b1;
 				ALUSrc = 1'b1;
 				ALUOp = `ALU_ADDU;
@@ -162,3 +166,5 @@ module CTRL(
 		endcase
 	end
 endmodule
+
+

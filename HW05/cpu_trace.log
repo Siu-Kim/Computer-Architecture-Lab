@@ -1,0 +1,4 @@
+[Cycle    1] PC: 00000000 | opcode: 00 | inst_ID: 00000021 | Stall: 0 | Flush: 0 || WB_RegWrite: 00000 | WB_Addr:          0 | WB_Data: <%h>
+[Cycle    2] PC: 00000004 | opcode: xx | inst_ID: xxxxxxxx | Stall: x | Flush: 0 || WB_RegWrite: 00000 | WB_Addr:          0 | WB_Data: <%h>
+[Cycle    3] PC: 00000008 | opcode: xx | inst_ID: xxxxxxxx | Stall: x | Flush: 0 || WB_RegWrite: 00000 | WB_Addr:          0 | WB_Data: <%h>
+[Cycle    4] PC: 0000000c | opcode: xx | inst_ID: xxxxxxxx | Stall: x | Flush: 1 || WB_RegWrite: 00000 | WB_Addr:          x | WB_Data: <%h>
